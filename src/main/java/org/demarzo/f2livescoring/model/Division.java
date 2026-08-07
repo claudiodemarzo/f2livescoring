@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Division {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
