@@ -31,8 +31,8 @@ public class MovementController {
         return movement.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Movement>> searchMovement(@RequestParam String query) {
+    @GetMapping("{query}")
+    public ResponseEntity<List<Movement>> searchMovement(@PathVariable String query) {
         return ResponseEntity.ok(movementService.searchMovement(query));
     }
 

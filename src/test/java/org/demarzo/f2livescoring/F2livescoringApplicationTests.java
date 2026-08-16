@@ -19,8 +19,9 @@ class F2livescoringApplicationTests {
     private Workout workoutDT() {
         Workout workout = new Workout();
         workout.setDivision(new Division("RX Men"));
+        workout.setEventNumber(1);
 
-        workout.setWorkoutName("DT");
+        workout.setName("DT");
 
         WorkoutBlock workoutBlock = new WorkoutBlock();
         workout.addBlock(workoutBlock);

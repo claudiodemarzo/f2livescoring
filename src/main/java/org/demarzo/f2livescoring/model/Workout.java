@@ -15,26 +15,29 @@ public class Workout {
     private Long id;
 
     @Column
-    private String workoutName;
+    private String name;
+
+    @Column
+    private Integer eventNumber;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<WorkoutBlock> workoutBlocks;
+    private List<WorkoutBlock> blocks;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Division division;
 
     public void addBlock(WorkoutBlock workoutBlock) {
-        if(workoutBlocks == null) {
-            workoutBlocks = new ArrayList<>();
+        if(blocks == null) {
+            blocks = new ArrayList<>();
         }
 
-        workoutBlocks.add(workoutBlock);
+        blocks.add(workoutBlock);
     }
 
     public void printWorkout() {
-        System.out.println("\"" + workoutName + "\" - Division: " + division.getName());
-        for (int i  = 0; i < workoutBlocks.size(); i++) {
-            WorkoutBlock block = workoutBlocks.get(i);
+        System.out.println(eventNumber + " \"" + name + "\" - Division: " + division.getName());
+        for (int i  = 0; i < blocks.size(); i++) {
+            WorkoutBlock block = blocks.get(i);
             System.out.println("Block " + (i + 1) + " - " + block.getTimeCap().getSeconds() + "s - " + block.getRounds() + " Rounds " + block.getWorkoutBlockType().name());
             System.out.println("-- MOVEMENTS --");
             for(WorkoutBlockMovement movement : block.getMovements()) {
