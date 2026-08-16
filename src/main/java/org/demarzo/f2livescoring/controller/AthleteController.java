@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("athlete")
 public class AthleteController {
@@ -32,5 +34,10 @@ public class AthleteController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("by-division/{divisionId}")
+    public ResponseEntity<List<Athlete>> findByDivision(@PathVariable long divisionId) {
+        return ResponseEntity.ok(athleteService.findByDivision(divisionId));
     }
 }
