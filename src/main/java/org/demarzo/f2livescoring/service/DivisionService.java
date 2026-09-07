@@ -17,32 +17,61 @@ public class DivisionService {
     private DivisionRepository divisionRepository;
 
     public Division getOrCreateByName(String name) {
-        log.info("getOrCreateByName name={}", name);
+        log.debug("getOrCreateByName - name={}", name);
         Division division = divisionRepository.findByName(name);
         if (division == null) {
-            log.info("Division not found - creating it, name={}", name);
+            log.info("Division not found - creating new division: {}", name);
             division = new Division();
             division.setName(name);
             division = divisionRepository.save(division);
+            log.info("Successfully created division with id {}", division.getId());
+        } else {
+            log.debug("Found existing division: {} (id={})", division.getName(), division.getId());
         }
         return division;
     }
 
     public Optional<Division> getById(long id) {
-        return divisionRepository.findById(id);
+        log.debug("Finding Division by id {}", id);
+        Optional<Division> division = divisionRepository.findById(id);
+        if (division.isPresent()) {
+            log.debug("Found division: {} (id={})", division.get().getName(), id);
+        } else {
+            log.debug("Division with id {} not found", id);
+        }
+        return division;
     }
 
     public void deleteById(long id) {
-        divisionRepository.deleteById(id);
+        log.debug("Deleting Division by id {}", id);
+        Optional<Division> division = divisionRepository.findById(id);
+        if (division.isPresent()) {
+            divisionRepository.deleteById(id);
+            log.info("Successfully deleted division: {} (id={})", division.get().getName(), id);
+        } else {
+            log.warn("Division with id {} not found, cannot delete", id);
+        }
     }
 
     public List<Division> getAll() {
-        return divisionRepository.findAll();
+        log.debug("Fetching all divisions");
+        List<Division> divisions = divisionRepository.findAll();
+        log.debug("Found {} divisions", divisions.size());
+        return divisions;
     }
 
     public Division updateById(long id, DivisionDto division) {
-        Division existing = divisionRepository.findById(id).get();
-        existing.setName(division.getName());
-        return divisionRepository.save(existing);
+        log.debug("Updating Division id={} with name={}", id, division.getName());
+        Optional<Division> existing = divisionRepository.findById(id);
+        if (existing.isEmpty()) {
+            log.error("Division with id {} not found, cannot update", id);
+            throw new IllegalArgumentException("Division with id " + id + " not found");
+        }
+        Division div = existing.get();
+        String oldName = div.getName();
+        div.setName(division.getName());
+        Division updated = divisionRepository.save(div);
+        log.info("Successfully updated division - id={}, oldName={}, newName={}", id, oldName, division.getName());
+        return updated;
     }
 }
